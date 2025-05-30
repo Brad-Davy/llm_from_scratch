@@ -8,7 +8,10 @@ def generate_the_prompt(user_prompt: str) -> str:
     return f"### Human: {user_prompt} \n ### Assistant whos name is OCF chatbot:"
 
 def clean_output(llm_output: str) -> str:
-    print(f'-->{llm_output.splitlines()[1].split(":")[1]}')
+    cleaned_text = llm_output.splitlines()[1].split(":")[1].split('#')[0]
+    print('\n')
+    print(f'\033[31m (OCF Chat Bot) --> \033[0m {cleaned_text}')
+    print('\n')
 
 local_path = "./tinyllama-local"
 
@@ -36,10 +39,14 @@ def generate_output(prompt: str = "Hello, what is your name and can you describe
     decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
     clean_output(decoded)
 
-
-
 generate_output()
+run = True  # initialize loop flag
 
+while run:
+    user_input = input("\033[32m (You) --> \033[0m")  # prompt the user
 
-
+    if user_input.lower() == 'done':
+        run = False  # fix: use assignment, not comparison
+    else:
+        generate_output(user_input)
 
